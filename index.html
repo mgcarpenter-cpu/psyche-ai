@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSYCHE — Discover What's Holding You Back</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --warm: #f5f0e8;
+    --warmer: #ede6d6;
+    --white: #fdfaf5;
+    --ink: #1a1a24;
+    --ink2: #3a3a48;
+    --gold: #b8922a;
+    --gold-soft: rgba(184,146,42,0.12);
+    --mist: #7a7a8a;
+    --line: rgba(26,26,36,0.09);
+    --deep: #111118;
+    --paper: #f4f1eb;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--warm);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── LANDING PAGE ── */
+  #landing {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  #coach-app {
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    background: #09090e;
+    color: var(--paper);
+  }
+
+  /* NAV */
+  nav {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 52px;
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo { text-decoration: none; }
+  .logo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 400;
+    letter-spacing: .3em; color: var(--ink);
+    line-height: 1; display: block;
+  }
+  .logo-url {
+    font-size: .52rem; letter-spacing: .28em;
+    text-transform: uppercase; color: var(--gold);
+    display: block; margin-top: 2px;
+  }
+  .nav-right { font-size: .7rem; letter-spacing: .12em; color: var(--mist); }
+
+  /* HERO */
+  .hero {
+    background: var(--white);
+    padding: 60px 52px 52px;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    position: relative; overflow: hidden;
+    flex: 1;
+  }
+  .hero::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 1px;
+    background: var(--line);
+  }
+  .hero-glow {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 55% 40% at 50% 100%, rgba(184,146,42,.07) 0%, transparent 65%);
+  }
+
+  .cat-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .65rem; letter-spacing: .36em; text-transform: uppercase;
+    color: var(--gold); background: var(--gold-soft);
+    padding: 7px 18px; margin-bottom: 28px;
+    border: 1px solid rgba(184,146,42,.18);
+    opacity: 0; animation: up .7s ease forwards .1s;
+  }
+
+  .hero-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4.5vw, 4.2rem);
+    font-weight: 300; line-height: 1.12; color: var(--ink);
+    margin-bottom: 20px; max-width: 640px;
+    opacity: 0; animation: up .7s ease forwards .22s;
+  }
+  .hero-h1 em { font-style: italic; color: var(--gold); }
+
+  .hero-sub {
+    font-size: 1.05rem; line-height: 1.78; color: var(--ink2);
+    margin-bottom: 12px; max-width: 500px;
+    opacity: 0; animation: up .7s ease forwards .34s;
+  }
+
+  .hero-detail {
+    font-size: .88rem; line-height: 1.72; color: var(--mist);
+    margin-bottom: 44px; max-width: 480px;
+    opacity: 0; animation: up .7s ease forwards .44s;
+  }
+
+  .steps {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 48px;
+    opacity: 0; animation: up .7s ease forwards .54s;
+    background: var(--warm); border: 1px solid var(--line); overflow: hidden;
+  }
+  .step {
+    padding: 20px 28px; text-align: center; flex: 1;
+    border-right: 1px solid var(--line);
+  }
+  .step:last-child { border-right: none; }
+  .step-n {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 300;
+    color: rgba(184,146,42,.3); line-height: 1; margin-bottom: 6px;
+  }
+  .step h4 {
+    font-size: .78rem; font-weight: 500; letter-spacing: .1em;
+    color: var(--ink); margin-bottom: 4px; text-transform: uppercase;
+  }
+  .step p { font-size: .72rem; color: var(--mist); line-height: 1.5; }
+
+  .plans {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--line);
+    width: 100%; max-width: 880px;
+    opacity: 0; animation: up .7s ease forwards .64s;
+    box-shadow: 0 8px 48px rgba(26,26,36,.08);
+  }
+
+  .plan {
+    background: var(--white); padding: 32px 26px;
+    display: flex; flex-direction: column; transition: background .2s;
+  }
+  .plan:hover { background: var(--warm); }
+  .plan.pop { background: var(--ink); }
+  .plan.pop:hover { background: var(--ink2); }
+
+  .plan-badge {
+    font-size: .5rem; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px; display: block; min-height: 14px;
+  }
+  .plan.pop .plan-badge { color: rgba(184,146,42,.75); }
+
+  .plan-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 300; margin-bottom: 6px; color: var(--ink);
+  }
+  .plan.pop .plan-name { color: #f4f1eb; }
+
+  .plan-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem; font-weight: 300;
+    color: var(--gold); line-height: 1; margin-bottom: 4px;
+  }
+  .plan-price span { font-size: .78rem; color: var(--mist); font-family: 'DM Sans', sans-serif; }
+  .plan.pop .plan-price span { color: rgba(244,241,235,.4); }
+
+  .plan-desc {
+    font-size: .75rem; line-height: 1.62; color: var(--mist);
+    margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--line);
+  }
+  .plan.pop .plan-desc { color: rgba(244,241,235,.48); border-color: rgba(244,241,235,.09); }
+
+  .plan-list { list-style: none; margin-bottom: 22px; flex: 1; }
+  .plan-list li {
+    font-size: .72rem; color: var(--mist); padding: 5px 0;
+    border-bottom: 1px solid rgba(26,26,36,.05);
+    display: flex; align-items: center; gap: 8px; line-height: 1.45;
+  }
+  .plan.pop .plan-list li { color: rgba(244,241,235,.42); border-color: rgba(244,241,235,.06); }
+  .plan-list li::before { content: '◈'; color: var(--gold); opacity: .28; font-size: .42rem; flex-shrink: 0; }
+  .plan-list li.on { color: var(--ink2); font-weight: 400; }
+  .plan.pop .plan-list li.on { color: #f4f1eb; }
+  .plan-list li.on::before { opacity: 1; }
+
+  .plan-btn {
+    width: 100%; padding: 12px; font-family: 'DM Sans', sans-serif;
+    font-size: .64rem; letter-spacing: .2em; text-transform: uppercase;
+    cursor: pointer; transition: all .2s; margin-top: auto; border: none;
+  }
+  .plan:not(.pop) .plan-btn { background: transparent; border: 1px solid rgba(184,146,42,.28); color: var(--gold); }
+  .plan:not(.pop) .plan-btn:hover { background: var(--gold); color: var(--white); border-color: var(--gold); }
+  .plan.pop .plan-btn { background: var(--gold); color: var(--ink); }
+  .plan.pop .plan-btn:hover { background: #c9a84c; }
+
+  .hero-note {
+    font-size: .62rem; color: var(--mist); margin-top: 16px;
+    letter-spacing: .1em; opacity: 0; animation: up .7s ease forwards .78s;
+  }
+
+  @keyframes up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+  .trust {
+    background: var(--warmer); border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line); padding: 18px 52px;
+    display: flex; justify-content: center; gap: 44px; flex-wrap: wrap;
+  }
+  .trust-item {
+    font-size: .68rem; color: var(--mist); letter-spacing: .06em;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .trust-item::before { content: '◈'; color: var(--gold); font-size: .42rem; opacity: .7; }
+
+  footer {
+    padding: 22px 52px; border-top: 1px solid var(--line);
+    background: var(--white); display: flex;
+    justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .foot-links, .foot-social { display: flex; gap: 20px; list-style: none; }
+  .foot-links a, .foot-social a {
+    font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--mist); text-decoration: none; opacity: .55;
+    transition: opacity .2s, color .2s;
+  }
+  .foot-links a:hover { opacity: 1; color: var(--ink); }
+  .foot-social a:hover { opacity: 1; color: var(--gold); }
+  .foot-mid { font-size: .6rem; color: var(--mist); opacity: .5; letter-spacing: .1em; text-align: center; line-height: 1.6; }
+  .foot-mid strong { display: block; font-weight: 400; color: var(--ink2); opacity: .65; letter-spacing: .12em; }
+
+  /* ── COACH APP ── */
+  .topbar {
+    height: 60px; display: flex; justify-content: space-between; align-items: center;
+    padding: 0 40px; background: rgba(9,9,14,0.96);
+    border-bottom: 1px solid rgba(244,241,235,0.07); flex-shrink: 0;
+  }
+  .coach-logo {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.4rem;
+    font-weight: 300; letter-spacing: .22em; color: #c8a44a; text-decoration: none;
+  }
+  .phase-wrap { display: flex; align-items: center; gap: 8px; }
+  .phase-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(244,241,235,0.07); transition: background .3s; }
+  .phase-dot.active { background: #c8a44a; }
+  .phase-dot.done { background: rgba(200,164,74,.3); }
+  .phase-lbl { font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: #888898; margin-left: 8px; }
+  .back-btn {
+    font-size: .62rem; letter-spacing: .16em; text-transform: uppercase;
+    color: #888898; background: none; border: none; cursor: pointer;
+    opacity: .45; transition: opacity .2s; font-family: 'DM Sans', sans-serif;
+  }
+  .back-btn:hover { opacity: 1; }
+
+  .coach-main { flex: 1; display: grid; grid-template-columns: 300px 1fr; overflow: hidden; height: calc(100vh - 60px); }
+
+  .sidebar {
+    background: #111118; border-right: 1px solid rgba(244,241,235,0.07);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .sb-sec { padding: 20px 22px; border-bottom: 1px solid rgba(244,241,235,0.07); flex-shrink: 0; }
+  .sb-lbl { font-size: .52rem; letter-spacing: .42em; text-transform: uppercase; color: #c8a44a; margin-bottom: 12px; display: block; }
+
+  .profile-summary {
+    font-family: 'Cormorant Garamond', serif; font-size: .9rem;
+    font-style: italic; line-height: 1.62; color: var(--paper); opacity: .75; min-height: 48px;
+  }
+  .profile-summary.empty {
+    font-style: normal; font-family: 'DM Sans', sans-serif;
+    font-size: .72rem; color: #888898; opacity: .38;
+  }
+
+  .dims { display: none; }
+  .dims.show { display: block; }
+  .dim { margin-bottom: 10px; }
+  .dim-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .dim-nm { font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: #888898; }
+  .dim-vl { font-size: .56rem; color: #c8a44a; }
+  .dim-track { height: 1px; background: rgba(244,241,235,.06); position: relative; }
+  .dim-fill { position: absolute; left:0; top:0; bottom:0; background: linear-gradient(90deg,#c8a44a,rgba(200,164,74,.2)); width:0; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+
+  .foundations { display: none; }
+  .foundations.show { display: block; }
+  .found-item { margin-bottom: 9px; }
+  .found-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+  .found-nm { font-size: .56rem; letter-spacing: .1em; color: #888898; }
+  .found-status { font-size: .54rem; letter-spacing: .1em; text-transform: uppercase; }
+  .found-status.strong { color: #c8a44a; }
+  .found-status.developing { color: rgba(200,164,74,.55); }
+  .found-status.growth { color: rgba(200,164,74,.3); }
+  .found-track { height: 1px; background: rgba(244,241,235,.06); position: relative; }
+  .found-fill { position: absolute; left:0; top:0; bottom:0; background: linear-gradient(90deg,#c8a44a,rgba(200,164,74,.15)); width:0; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+
+  .sb-scroll { flex: 1; overflow-y: auto; padding: 18px 22px; }
+  .insight {
+    font-size: .72rem; line-height: 1.6; color: #888898;
+    padding: 8px 0; border-bottom: 1px solid rgba(244,241,235,.04);
+    display: flex; gap: 8px;
+  }
+  .insight::before { content:'◈'; color:#c8a44a; opacity:.4; font-size:.46rem; margin-top:3px; flex-shrink:0; }
+  .sb-empty { font-size: .72rem; color: #888898; opacity: .3; font-style: italic; font-family: 'Cormorant Garamond', serif; line-height: 1.6; }
+
+  .chat-area { display: flex; flex-direction: column; overflow: hidden; }
+  .chat-header {
+    padding: 16px 30px; border-bottom: 1px solid rgba(244,241,235,0.07);
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .chat-title { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 300; color: var(--paper); }
+  .chat-title em { font-style: italic; color: #c8a44a; }
+  .chat-status { display: flex; align-items: center; gap: 6px; font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: #888898; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4caf50; animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  .profile-banner {
+    display: none; padding: 10px 30px;
+    background: linear-gradient(90deg, rgba(200,164,74,.07), rgba(200,164,74,.02));
+    border-bottom: 1px solid rgba(200,164,74,.1);
+    font-size: .68rem; color: #c8a44a; letter-spacing: .12em;
+    align-items: center; gap: 8px; flex-shrink: 0;
+  }
+  .profile-banner.show { display: flex; }
+  .profile-banner::before { content: '◈'; font-size: .46rem; }
+
+  .messages {
+    flex: 1; overflow-y: auto; padding: 24px 30px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .messages::-webkit-scrollbar { width: 3px; }
+  .messages::-webkit-scrollbar-thumb { background: rgba(244,241,235,.08); border-radius: 2px; }
+
+  .msg-wrap { display: flex; flex-direction: column; gap: 4px; animation: msgIn .3s ease; }
+  @keyframes msgIn { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:none} }
+  .msg-wrap.user { align-items: flex-end; }
+  .msg-who { font-size: .5rem; letter-spacing: .22em; text-transform: uppercase; color: #888898; opacity: .42; padding: 0 13px; }
+
+  .bubble { max-width: 72%; padding: 12px 16px; font-size: .84rem; line-height: 1.7; }
+  .bubble-coach {
+    background: rgba(200,164,74,.06); border-left: 2px solid rgba(200,164,74,.28);
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: var(--paper); opacity: .9;
+  }
+  .bubble-user {
+    background: rgba(244,241,235,.032); border: 1px solid rgba(244,241,235,0.07);
+    color: var(--paper); opacity: .8; font-style: normal;
+    font-family: 'DM Sans', sans-serif; font-size: .8rem;
+  }
+
+  .typing { display: flex; align-items: center; gap: 4px; padding: 12px 16px; background: rgba(200,164,74,.04); border-left: 2px solid rgba(200,164,74,.15); max-width: 68px; }
+  .typing span { width: 4px; height: 4px; border-radius: 50%; background: #c8a44a; opacity: .3; animation: tdot 1.2s ease-in-out infinite; }
+  .typing span:nth-child(2) { animation-delay: .2s; }
+  .typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes tdot { 0%,60%,100%{opacity:.2;transform:scale(1)} 30%{opacity:1;transform:scale(1.3)} }
+
+  .phase-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: .52rem; letter-spacing: .24em; text-transform: uppercase;
+    color: #c8a44a; background: rgba(200,164,74,.07);
+    border: 1px solid rgba(200,164,74,.14);
+    padding: 3px 9px; margin-bottom: 4px; align-self: flex-start;
+  }
+
+  .input-area { padding: 16px 30px; border-top: 1px solid rgba(244,241,235,0.07); flex-shrink: 0; }
+  .input-wrap { display: flex; gap: 9px; align-items: flex-end; }
+  .chat-input {
+    flex: 1; background: rgba(244,241,235,.022); border: 1px solid rgba(244,241,235,0.07);
+    color: var(--paper); padding: 11px 14px; font-family: 'DM Sans', sans-serif;
+    font-size: .84rem; line-height: 1.5; resize: none; outline: none;
+    transition: border-color .2s; min-height: 44px; max-height: 120px; overflow-y: auto;
+  }
+  .chat-input:focus { border-color: rgba(200,164,74,.35); }
+  .chat-input::placeholder { color: #888898; opacity: .34; }
+  .send-btn {
+    background: #c8a44a; border: none; color: #1a1a24;
+    width: 44px; height: 44px; cursor: pointer; font-size: .9rem;
+    transition: background .2s, transform .2s; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .send-btn:hover { background: #dbb96a; transform: translateY(-1px); }
+  .send-btn:disabled { opacity: .36; cursor: default; transform: none; }
+  .input-hint { font-size: .56rem; color: #888898; opacity: .28; margin-top: 6px; letter-spacing: .1em; text-align: center; }
+
+  .welcome {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 40px; gap: 16px;
+  }
+  .welcome-ico { font-size: 2rem; margin-bottom: 4px; }
+  .welcome h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; line-height: 1.2; color: var(--paper); }
+  .welcome h2 em { font-style: italic; color: #c8a44a; }
+  .welcome p { font-size: .84rem; color: #888898; line-height: 1.72; max-width: 340px; }
+  .welcome-btn {
+    background: #c8a44a; color: #1a1a24; border: none;
+    padding: 12px 34px; font-family: 'DM Sans', sans-serif;
+    font-size: .66rem; font-weight: 500; letter-spacing: .22em;
+    text-transform: uppercase; cursor: pointer;
+    transition: background .2s, transform .2s; margin-top: 4px;
+  }
+  .welcome-btn:hover { background: #dbb96a; transform: translateY(-2px); }
+  .welcome-note { font-size: .58rem; color: #888898; opacity: .36; letter-spacing: .1em; }
+
+  /* FEEDBACK */
+  .fb-trigger {
+    position: fixed; bottom: 20px; right: 20px;
+    background: rgba(200,164,74,.12); border: 1px solid rgba(200,164,74,.25);
+    color: #c8a44a; padding: 8px 16px; font-family: 'DM Sans', sans-serif;
+    font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+    cursor: pointer; transition: all .2s; display: none; z-index: 100;
+  }
+  .fb-trigger.show { display: block; }
+  .fb-trigger:hover { background: rgba(200,164,74,.2); }
+
+  .fb-overlay {
+    display: none; position: fixed; inset: 0; z-index: 500;
+    background: rgba(9,9,14,.85); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center;
+  }
+  .fb-overlay.show { display: flex; }
+  .fb-box {
+    background: #111118; border: 1px solid rgba(200,164,74,.2);
+    padding: 40px; max-width: 480px; width: 90%; position: relative;
+  }
+  .fb-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, #c8a44a, transparent);
+  }
+  .fb-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; margin-bottom: 6px; color: var(--paper); }
+  .fb-title em { font-style: italic; color: #c8a44a; }
+  .fb-sub { font-size: .78rem; color: #888898; margin-bottom: 24px; line-height: 1.6; }
+  .fb-q { font-size: .72rem; letter-spacing: .1em; color: var(--paper); opacity: .7; margin-bottom: 10px; }
+  .fb-stars { display: flex; gap: 8px; margin-bottom: 20px; }
+  .star { font-size: 1.4rem; cursor: pointer; opacity: .25; transition: opacity .2s, transform .2s; color: #c8a44a; }
+  .star.on { opacity: 1; }
+  .star:hover { transform: scale(1.2); }
+  .fb-textarea {
+    width: 100%; background: rgba(244,241,235,.025); border: 1px solid rgba(244,241,235,0.07);
+    color: var(--paper); padding: 12px 14px; font-family: 'DM Sans', sans-serif;
+    font-size: .8rem; line-height: 1.6; resize: vertical; min-height: 80px;
+    outline: none; transition: border-color .2s; margin-bottom: 8px;
+  }
+  .fb-textarea:focus { border-color: rgba(200,164,74,.4); }
+  .fb-textarea::placeholder { color: #888898; opacity: .35; }
+  .fb-row { display: flex; gap: 10px; margin-top: 6px; }
+  .fb-btn { flex: 1; padding: 11px; font-family: 'DM Sans', sans-serif; font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; cursor: pointer; transition: all .2s; border: none; }
+  .fb-submit { background: #c8a44a; color: #1a1a24; }
+  .fb-submit:hover { background: #dbb96a; }
+  .fb-skip { background: transparent; border: 1px solid rgba(244,241,235,0.07) !important; color: #888898; }
+  .fb-skip:hover { border-color: rgba(200,164,74,.3) !important; color: #c8a44a; }
+  .fb-thanks { display: none; text-align: center; padding: 20px 0; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; color: #c8a44a; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ -->
+<!-- LANDING PAGE                          -->
+<!-- ══════════════════════════════════════ -->
+<div id="landing">
+
+  <nav>
+    <a href="#" class="logo">
+      <span class="logo-name">PSYCHE</span>
+      <span class="logo-url">psyche.ai</span>
+    </a>
+    <span class="nav-right">Free to start — no card required</span>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="cat-label">Personal AI Coaching</div>
+    <h1 class="hero-h1">
+      Discover what's holding you back.<br>
+      <em>Unlock what's possible.</em>
+    </h1>
+    <p class="hero-sub">A free psychological profile — then an AI coach that already knows you deeply from the very first conversation.</p>
+    <p class="hero-detail">One natural conversation reveals your personality, your life foundations, and where real growth is possible. No tests. No forms. Just talk.</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-n">01</div><h4>Talk</h4><p>A natural conversation. No tests or forms. Just speak freely.</p></div>
+      <div class="step"><div class="step-n">02</div><h4>Discover</h4><p>Your full psychological profile. Accurate in a way that surprises people.</p></div>
+      <div class="step"><div class="step-n">03</div><h4>Grow</h4><p>Your AI coach already knows you. Available every moment you need it.</p></div>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <span class="plan-badge">Free — Always</span>
+        <div class="plan-name">Discover</div>
+        <div class="plan-price">$0<span></span></div>
+        <p class="plan-desc">Your full psychological profile. See clearly what the AI sees in you.</p>
+        <ul class="plan-list">
+          <li class="on">Profiling conversation</li>
+          <li class="on">Full personality profile</li>
+          <li class="on">Life foundations assessment</li>
+          <li class="on">Life areas overview</li>
+          <li class="on">Shareable profile card</li>
+          <li class="on">5 coaching messages</li>
+          <li>Unlimited coaching</li>
+          <li>Social media connect</li>
+        </ul>
+        <button class="plan-btn" onclick="startCoach()">Start Free</button>
+      </div>
+      <div class="plan pop">
+        <span class="plan-badge">Most Popular</span>
+        <div class="plan-name">Coach</div>
+        <div class="plan-price">$9<span>/month</span></div>
+        <p class="plan-desc">Your personal AI coach — available 24/7, knowing your psychology from day one.</p>
+        <ul class="plan-list">
+          <li class="on">Everything in Discover</li>
+          <li class="on">Unlimited coaching</li>
+          <li class="on">Daily check ins</li>
+          <li class="on">Goal tracking</li>
+          <li class="on">Pattern recognition</li>
+          <li class="on">Profile deepens over time</li>
+          <li class="on">Connect social accounts</li>
+        </ul>
+        <button class="plan-btn" onclick="startCoach()">Start Coaching</button>
+      </div>
+      <div class="plan">
+        <span class="plan-badge">Full Access</span>
+        <div class="plan-name">Deep</div>
+        <div class="plan-price">$19<span>/month</span></div>
+        <p class="plan-desc">Everything in Coach — plus relationships, journal and all new modules.</p>
+        <ul class="plan-list">
+          <li class="on">Everything in Coach</li>
+          class="on">Relationship coaching</li>
+          <li class="on">People in your life profiled</li>
+          <li class="on">Journal with AI analysis</li>
+          <li class="on">All new modules included</li>
+          <li class="on">Early access — always</li>
+          <li class="on">Priority response</li>
+        </ul>
+        <button class="plan-btn" onclick="startCoach()">Go Deep</button>
+      </div>
+    </div>
+
+    <p class="hero-note">No credit card. No commitment. Cancel anytime.</p>
+  </section>
+
+  <div class="trust">
+    <div class="trust-item">Conversation based — no forms or tests</div>
+    <div class="trust-item">Three layer psychological assessment</div>
+    <div class="trust-item">Your data is yours — delete anytime</div>
+    <div class="trust-item">Built on proven principles of human flourishing</div>
+  </div>
+
+  <footer>
+    <ul class="foot-links">
+      <li><a href="#">About</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">For Business</a></li>
+    </ul>
+    <div class="foot-mid">
+      <strong>Daily insights on psychology and growth</strong>
+      Follow us →
+    </div>
+    <ul class="foot-social">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">TikTok</a></li>
+      <li><a href="#">X</a></li>
+      <li><a href="#">LinkedIn</a></li>
+    </ul>
+  </footer>
+
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- COACH APP                             -->
+<!-- ══════════════════════════════════════ -->
+<div id="coach-app">
+
+  <div class="topbar">
+    <span class="coach-logo">PSYCHE</span>
+    <div class="phase-wrap">
+      <div class="phase-dot active" id="dot1"></div>
+      <div class="phase-dot" id="dot2"></div>
+      <div class="phase-dot" id="dot3"></div>
+      <span class="phase-lbl" id="phase-lbl">Discovery</span>
+    </div>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+  </div>
+
+  <div class="coach-main">
+    <div class="sidebar">
+      <div class="sb-sec">
+        <span class="sb-lbl">Your Psychology</span>
+        <p class="profile-summary empty" id="profile-summary">Your profile builds as we talk...</p>
+      </div>
+      <div class="sb-sec dims" id="dims-section">
+        <span class="sb-lbl">Personality</span>
+        <div class="dim"><div class="dim-row"><span class="dim-nm">Openness</span><span class="dim-vl" id="v-open">—</span></div><div class="dim-track"><div class="dim-fill" id="b-open"></div></div></div>
+        <div class="dim"><div class="dim-row"><span class="dim-nm">Resilience</span><span class="dim-vl" id="v-res">—</span></div><div class="dim-track"><div class="dim-fill" id="b-res"></div></div></div>
+        <div class="dim"><div class="dim-row"><span class="dim-nm">Drive</span><span class="dim-vl" id="v-drive">—</span></div><div class="dim-track"><div class="dim-fill" id="b-drive"></div></div></div>
+        <div class="dim"><div class="dim-row"><span class="dim-nm">Agreeableness</span><span class="dim-vl" id="v-agree">—</span></div><div class="dim-track"><div class="dim-fill" id="b-agree"></div></div></div>
+        <div class="dim"><div class="dim-row"><span class="dim-nm">Presence</span><span class="dim-vl" id="v-pres">—</span></div><div class="dim-track"><div class="dim-fill" id="b-pres"></div></div></div>
+      </div>
+      <div class="sb-sec foundations" id="found-section">
+        <span class="sb-lbl">Life Foundations</span>
+        <div class="found-item"><div class="found-row"><span class="found-nm">Understanding — Clarity</span><span class="found-status" id="fs-1">—</span></div><div class="found-track"><div class="found-fill" id="fb-1"></div></div></div>
+        <div class="found-item"><div class="found-row"><span class="found-nm">Intention — Purpose</span><span class="found-status" id="fs-2">—</span></div><div class="found-track"><div class="found-fill" id="fb-2"></div></div></div>
+        <div class="found-item"><div class="found-row"><span class="found-nm">Speech — Expression</span><span class="found-status" id="fs-3">—</span></div><div class="found-track"><div class="found-fill" id="fb-3"></div></div></div>
+        <div class="found-item"><div class="found-row"><span class="found-nm">Action — Integrity</span><span class="found-status" id="fs-4">—</span></div><div class="found-track"><div class="found-fill" id="fb-4"></div></div></div>
+        <div class="found-item"><div class="found-row"><span class="found-nm">Livelihood — Meaning</span><span class="found-status" id="fs-5">—</span></div><div class="found-track"><div class="found-fill" id="fb-5"></div></div></div>
+        <div class="found-item"><div class="found-row"><span class="found-nm">Effort — Balance</span><span class="found-status" id="fs-6">—</span></div><div class="found-track"><div class="found-fill" id="fb-6"></div></div></div>
+        <div class="found-item"><div class="found-row"><span class="found-nm">Mindfulness — Presence</span><span class="found-status" id="fs-7">—</span></div><div class="found-track"><div class="found-fill" id="fb-7"></div></div></div>
+        <div class="found-item"><div class="found-row"><span class="found-nm">Concentration — Absorption</span><span class="found-status" id="fs-8">—</span></div><div class="found-track"><div class="found-fill" id="fb-8"></div></div></div>
+      </div>
+      <div class="sb-scroll">
+        <span class="sb-lbl">Insights</span>
+        <p class="sb-empty" id="insights-empty">"Know yourself deeply and everything becomes clear."</p>
+        <div id="insights-list"></div>
+      </div>
+    </div>
+
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="chat-title">Your <em>PSYCHE</em> Session</div>
+        <div class="chat-status"><div class="status-dot"></div>Present</div>
+      </div>
+      <div class="profile-banner" id="profile-banner">Profile complete — your coach now knows you deeply.</div>
+      <div class="welcome" id="welcome">
+        <div class="welcome-ico">◈</div>
+        <h2>Begin your <em>discovery</em></h2>
+        <p>A natural conversation. We explore who you are, how you live, and what's possible for you. No right answers. Complete honesty welcome.</p>
+        <button class="welcome-btn" onclick="startSession()">Begin Session →</button>
+        <p class="welcome-note">15–20 minutes. Free. Confidential.</p>
+      </div>
+      <div class="messages" id="messages" style="display:none;"></div>
+      <div class="input-area" id="input-area" style="display:none;">
+        <div class="input-wrap">
+          <textarea class="chat-input" id="chat-input" placeholder="Speak freely..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">→</button>
+        </div>
+        <p class="input-hint">Enter to send · Shift+Enter for new line</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FEEDBACK -->
+<button class="fb-trigger" id="fb-trigger" onclick="openFeedback()">Leave Feedback</button>
+<div class="fb-overlay" id="fb-overlay">
+  <div class="fb-box">
+    <h3 class="fb-title">Your <em>feedback</em></h3>
+    <p class="fb-sub">Help us improve. Your honest thoughts make psyche.ai better for everyone.</p>
+    <p class="fb-q">How accurate was your profile?</p>
+    <div class="fb-stars" id="stars-accuracy">
+      <span class="star" onclick="rateStar('accuracy',1)">★</span>
+      <span class="star" onclick="rateStar('accuracy',2)">★</span>
+      <span class="star" onclick="rateStar('accuracy',3)">★</span>
+      <span class="star" onclick="rateStar('accuracy',4)">★</span>
+      <span class="star" onclick="rateStar('accuracy',5)">★</span>
+    </div>
+    <p class="fb-q">How useful was the coaching?</p>
+    <div class="fb-stars" id="stars-coaching">
+      <span class="star" onclick="rateStar('coaching',1)">★</span>
+      <span class="star" onclick="rateStar('coaching',2)">★</span>
+      <span class="star" onclick="rateStar('coaching',3)">★</span>
+      <span class="star" onclick="rateStar('coaching',4)">★</span>
+      <span class="star" onclick="rateStar('coaching',5)">★</span>
+    </div>
+    <p class="fb-q">What could be better?</p>
+    <textarea class="fb-textarea" id="fb-text" placeholder="Accuracy, tone, what was missing, what surprised you..."></textarea>
+    <p class="fb-q">What was most accurate or useful?</p>
+    <textarea class="fb-textarea" id="fb-good" placeholder="What rang true for you?"></textarea>
+    <div class="fb-row">
+      <button class="fb-btn fb-submit" onclick="submitFeedback()">Submit Feedback</button>
+      <button class="fb-btn fb-skip" onclick="closeFeedback()">Skip</button>
+    </div>
+    <p class="fb-thanks" id="fb-thanks">Thank you. Every response shapes what psyche.ai becomes.</p>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──────────────────────────
+function startCoach() {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('coach-app').style.display = 'flex';
+}
+
+function goBack() {
+  document.getElementById('coach-app').style.display = 'none';
+  document.getElementById('landing').style.display = 'flex';
+}
+
+// ── STATE ────────────────────────────────
+let history = [];
+let profile = null;
+let profileDone = false;
+let phase = 'profiling';
+let ratings = { accuracy: 0, coaching: 0 };
+
+// ── PROMPTS ──────────────────────────────
+const PROFILING_PROMPT = `You are the PSYCHE guide — warm, perceptive, genuinely curious. Your purpose is a natural conversation that reveals who this person truly is.
+
+RESPONSE STYLE — CRITICAL:
+- Keep responses SHORT — 2-4 sentences maximum
+- Ask ONE question at a time
+- Sound like a thoughtful human, not a system
+- React genuinely to what they say before asking next question
+- Warmth and directness in equal measure
+
+YOUR THREE-LAYER ASSESSMENT:
+
+LAYER 1 — PERSONALITY (score 0-100):
+Openness, Resilience, Drive, Agreeableness, Presence
+
+LAYER 2 — LIFE FOUNDATIONS (score 0-100):
+Clarity (understanding), Purpose (intention), Expression (speech), Integrity (action), Meaning (livelihood), Balance (effort), Presence (mindfulness), Absorption (concentration)
+
+LAYER 3 — LIFE AREAS (score 0-100, 100=thriving):
+Relationships, Purpose & Meaning, Money & Security, Health & Energy, Self Worth, Fear & Anxiety, Anger & Resentment, Loneliness, Direction & Focus, Grief & Loss
+
+CONVERSATION — cover naturally across 12-16 exchanges:
+1. Something that felt genuinely like them
+2. Relationships — what's working and what isn't
+3. Work and meaning
+4. How they handle difficulty
+5. Their relationship with themselves
+6. What they're moving toward vs avoiding
+7. Presence and stillness
+
+TONE: Warm, direct, genuinely interested. Spread positivity — find real strengths. Never moralistic.
+
+IMPORTANT — Mental health: If someone shows signs of serious distress, gently acknowledge it and suggest professional support alongside your coaching.
+
+When complete, end with:
+PROFILE_COMPLETE:{"summary":"2-3 sentence portrait — warm, specific, second person","openness":75,"resilience":80,"drive":85,"agreeableness":40,"presence":61,"foundations":{"clarity":80,"purpose":65,"expression":45,"integrity":88,"meaning":35,"balance":90,"presence":58,"absorption":82},"life_areas":{"relationships":65,"purpose_meaning":40,"money_security":70,"health_energy":75,"self_worth":55,"fear_anxiety":60,"anger_resentment":30,"loneliness":50,"direction_focus":45,"grief_loss":70},"strength":"their most genuine strength","core_driver":"what fundamentally motivates them","key_insight":"most important thing to understand about them","growth_edge":"most significant growth opportunity"}`;
+
+const COACHING_PROMPT = (p) => `You are the PSYCHE personal coach. You know this person deeply.
+
+THEIR PROFILE:
+${JSON.stringify(p, null, 2)}
+
+RESPONSE STYLE — CRITICAL:
+- SHORT — 3-5 sentences for most responses
+- Ask powerful questions more than giving advice
+- Direct and warm in equal measure
+- Never generic — always connected to their specific profile
+
+YOUR FOUNDATION:
+You are built on proven principles of human flourishing — tested across centuries and confirmed by modern research. You believe clarity, purpose, honest action and presence are the foundations of genuine happiness. Practical wisdom beats clever theory. Small consistent actions aligned with real values create lasting change.
+
+HOW YOU COACH:
+- Connect everything to their specific profile
+- When they struggle — identify which foundation needs attention
+- When they succeed — name what's working
+- Surface patterns they can't see themselves
+- Practical suggestions — simple, specific, one at a time
+- Genuine warmth — celebrate real progress
+
+IMPORTANT — Mental health: If someone shows signs of serious distress, acknowledge it with genuine care and gently suggest professional support. You are a coach, not a therapist.
+
+After each response, if you have a new insight:
+INSIGHT:{"text":"one sentence about them"}`;
+
+// ── SESSION ──────────────────────────────
+async function startSession() {
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('messages').style.display = 'flex';
+  document.getElementById('input-area').style.display = 'block';
+  await getResponse(null, true);
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || document.getElementById('send-btn').disabled) return;
+  input.value = '';
+  input.style.height = 'auto';
+  addBubble('user', text);
+  history.push({ role: 'user', content: text });
+  await getResponse(text, false);
+}
+
+async function getResponse(userText, isOpening) {
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  const typing = addTyping();
+
+  try {
+    const systemPrompt = profileDone ? COACHING_PROMPT(profile) : PROFILING_PROMPT;
+    const messages = isOpening ? [{ role: 'user', content: 'Begin' }] : history;
+
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: systemPrompt,
+        messages: messages
+      })
+    });
+
+    const data = await res.json();
+    let text = data.content?.map(b => b.text || '').join('') || '';
+    typing.remove();
+
+    if (text.includes('PROFILE_COMPLETE:')) {
+      const parts = text.split('PROFILE_COMPLETE:');
+      const clean = parts[0].trim();
+      try {
+        profile = JSON.parse(parts[1].trim());
+        profileDone = true;
+        phase = 'coaching';
+        updateSidebar(profile);
+        updatePhase();
+        document.getElementById('profile-banner').classList.add('show');
+        document.getElementById('fb-trigger').classList.add('show');
+        if (clean) { addCoachBubble(clean, false); history.push({ role: 'assistant', content: clean }); }
+        setTimeout(() => {
+          const t = "Your profile is complete. I can see both your genuine strengths and where the real growth lies. What would you most like to work on?";
+          addCoachBubble(t, true);
+          history.push({ role: 'assistant', content: t });
+        }, 600);
+      } catch(e) {
+        addCoachBubble(clean || text, false);
+        history.push({ role: 'assistant', content: clean || text });
+      }
+    } else if (text.includes('INSIGHT:')) {
+      const parts = text.split('INSIGHT:');
+      const clean = parts[0].trim();
+      addCoachBubble(clean, false);
+      history.push({ role: 'assistant', content: clean });
+      try { const ins = JSON.parse(parts[1].trim()); addInsight(ins.text); } catch(e) {}
+    } else {
+      addCoachBubble(text, false);
+      history.push({ role: 'assistant', content: text });
+    }
+  } catch(err) {
+    typing.remove();
+    addCoachBubble("Something interrupted us. Please try again.", false);
+    console.error(err);
+  }
+  btn.disabled = false;
+}
+
+// ── UI ───────────────────────────────────
+function addBubble(role, text) {
+  const msgs = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = `msg-wrap ${role}`;
+  const who = document.createElement('div');
+  who.className = 'msg-who';
+  who.textContent = role === 'user' ? 'You' : 'Psyche';
+  const bubble = document.createElement('div');
+  bubble.className = `bubble bubble-${role === 'user' ? 'user' : 'coach'}`;
+  bubble.textContent = text;
+  wrap.appendChild(who);
+  wrap.appendChild(bubble);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addCoachBubble(text, isTransition) {
+  const msgs = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-wrap coach';
+  if (isTransition) {
+    const badge = document.createElement('div');
+    badge.className = 'phase-badge';
+    badge.textContent = '◈ Coaching begins';
+    wrap.appendChild(badge);
+  }
+  const who = document.createElement('div');
+  who.className = 'msg-who';
+  who.textContent = 'Psyche';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble bubble-coach';
+  bubble.textContent = text;
+  wrap.appendChild(who);
+  wrap.appendChild(bubble);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTyping() {
+  const msgs = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-wrap coach';
+  wrap.id = 'typing';
+  const who = document.createElement('div');
+  who.className = 'msg-who';
+  who.textContent = 'Psyche';
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  wrap.appendChild(who);
+  wrap.appendChild(t);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+  return wrap;
+}
+
+function addInsight(text) {
+  document.getElementById('insights-empty').style.display = 'none';
+  const list = document.getElementById('insights-list');
+  const item = document.createElement('div');
+  item.className = 'insight';
+  item.textContent = text;
+  list.appendChild(item);
+}
+
+function updateSidebar(p) {
+  const sum = document.getElementById('profile-summary');
+  sum.textContent = p.summary;
+  sum.classList.remove('empty');
+  document.getElementById('dims-section').classList.add('show');
+  [['open',p.openness],['res',p.resilience],['drive',p.drive],['agree',p.agreeableness],['pres',p.presence]].forEach(([k,v]) => {
+    document.getElementById(`v-${k}`).textContent = `${v}%`;
+    setTimeout(() => { document.getElementById(`b-${k}`).style.width = `${v}%`; }, 200);
+  });
+  document.getElementById('found-section').classList.add('show');
+  const f = p.foundations;
+  [[1,f.clarity],[2,f.purpose],[3,f.expression],[4,f.integrity],[5,f.meaning],[6,f.balance],[7,f.presence],[8,f.absorption]].forEach(([i,v]) => {
+    const s = v >= 75 ? 'Strong' : v >= 50 ? 'Developing' : 'Growth area';
+    const c = v >= 75 ? 'strong' : v >= 50 ? 'developing' : 'growth';
+    const el = document.getElementById(`fs-${i}`);
+    el.textContent = s;
+    el.className = `found-status ${c}`;
+    setTimeout(() => { document.getElementById(`fb-${i}`).style.width = `${v}%`; }, 300);
+  });
+  if (p.strength) addInsight(p.strength);
+  if (p.core_driver) addInsight(p.core_driver);
+  if (p.key_insight) addInsight(p.key_insight);
+  if (p.growth_edge) addInsight(p.growth_edge);
+}
+
+function updatePhase() {
+  const map = { profiling:0, coaching:1, deep:2 };
+  const labels = { profiling:'Discovery', coaching:'Coaching', deep:'Deep Work' };
+  const idx = map[phase] || 0;
+  ['dot1','dot2','dot3'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.className = 'phase-dot';
+    if (i < idx) el.classList.add('done');
+    if (i === idx) el.classList.add('active');
+  });
+  document.getElementById('phase-lbl').textContent = labels[phase];
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── FEEDBACK ─────────────────────────────
+function openFeedback() { document.getElementById('fb-overlay').classList.add('show'); }
+function closeFeedback() { document.getElementById('fb-overlay').classList.remove('show'); }
+
+function rateStar(type, val) {
+  ratings[type] = val;
+  document.getElementById(`stars-${type}`).querySelectorAll('.star').forEach((s,i) => {
+    s.classList.toggle('on', i < val);
+  });
+}
+
+function submitFeedback() {
+  const feedback = {
+    accuracy_rating: ratings.accuracy,
+    coaching_rating: ratings.coaching,
+    improvements: document.getElementById('fb-text').value,
+    positives: document.getElementById('fb-good').value,
+    timestamp: new Date().toISOString(),
+    profile_summary: profile ? profile.summary : 'No profile yet'
+  };
+  console.log('PSYCHE FEEDBACK:', feedback);
+  document.querySelector('.fb-row').style.display = 'none';
+  document.getElementById('fb-thanks').style.display = 'block';
+  setTimeout(() => {
+    closeFeedback();
+    document.querySelector('.fb-row').style.display = 'flex';
+    document.getElementById('fb-thanks').style.display = 'none';
+  }, 2500);
+}
+</script>
+</body>
+</html>
