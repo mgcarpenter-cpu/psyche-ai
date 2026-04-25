@@ -796,7 +796,7 @@ async function getResponse(userText, isOpening) {
     const systemPrompt = profileDone ? COACHING_PROMPT(profile) : PROFILING_PROMPT;
     const messages = isOpening ? [{ role: 'user', content: 'Begin' }] : history;
 
-    const res = await fetch('/.netlify/functions/chat', {
+    const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
