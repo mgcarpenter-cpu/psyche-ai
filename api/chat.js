@@ -1,16 +1,14 @@
-exports.handler = async function(event, context) {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method not allowed' };
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const apiKey = process.env.ANTHROPIC_KEY;
   if (!apiKey) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'API key not configured' }) };
+    return res.status(500).json({ error: 'API key not configured' });
   }
 
   try {
-    const body = JSON.parse(event.body);
-
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -21,26 +19,15 @@ exports.handler = async function(event, context) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 600,
-        system: body.system,
-        messages: body.messages
+        system: req.body.system,
+        messages: req.body.messages
       })
     });
 
     const data = await response.json();
-
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify(data)
-    };
+    res.status(200).json(data);
 
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Something went wrong' })
-    };
+    res.status(500).json({ error: 'Something went wrong' });
   }
-};
+}
